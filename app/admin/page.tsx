@@ -4,10 +4,9 @@ import React, { useEffect, useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { RefreshCw, Mail, Calendar, User, MessageSquare, CheckCircle, Clock, XCircle, BarChart3, TrendingUp, Search, Download, Filter } from 'lucide-react'
 import { Contact } from '@/lib/supabase'
-import { demoStorage, DemoContact } from '@/lib/demo-storage'
 
 export default function AdminPage() {
-  const [contacts, setContacts] = useState<(Contact | DemoContact)[]>([])
+  const [contacts, setContacts] = useState<Contact[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedStatus, setSelectedStatus] = useState<Contact['status'] | 'all'>('all')
   const [error, setError] = useState<string | null>(null)
@@ -20,7 +19,6 @@ export default function AdminPage() {
     todayCount: number
     weekCount: number
   }>({ total: 0, new: 0, read: 0, replied: 0, closed: 0, todayCount: 0, weekCount: 0 })
-  const [isDemo, setIsDemo] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [dateFilter, setDateFilter] = useState<'all' | 'today' | 'week' | 'month'>('all')
   const [mounted, setMounted] = useState(false)
@@ -47,45 +45,63 @@ export default function AdminPage() {
       
       const result = await response.json()
       
+      console.log('API Response:', result)
+      
       if (result.success && result.contacts) {
         setContacts(result.contacts)
-        setIsDemo(false)
         
-        // Calculate stats
-        const now = new Date()
-        const today = now.toDateString()
-        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+        // Use stats from API if available, otherwise calculate
+        if (result.stats) {
+          setStats(result.stats)
+        } else {
+          // Calculate stats
+          const now = new Date()
+          const today = now.toDateString()
+          const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+          
+          setStats({
+            total: result.contacts.length,
+            new: result.contacts.filter((c: Contact) => c.status === 'new').length,
+            read: result.contacts.filter((c: Contact) => c.status === 'read').length,
+            replied: result.contacts.filter((c: Contact) => c.status === 'replied').length,
+            closed: result.contacts.filter((c: Contact) => c.status === 'closed').length,
+            todayCount: result.contacts.filter((c: Contact) => new Date(c.created_at!).toDateString() === today).length,
+            weekCount: result.contacts.filter((c: Contact) => new Date(c.created_at!) >= weekAgo).length
+          })
+        }
         
-        setStats({
-          total: result.contacts.length,
-          new: result.contacts.filter((c: Contact) => c.status === 'new').length,
-          read: result.contacts.filter((c: Contact) => c.status === 'read').length,
-          replied: result.contacts.filter((c: Contact) => c.status === 'replied').length,
-          closed: result.contacts.filter((c: Contact) => c.status === 'closed').length,
-          todayCount: result.contacts.filter((c: Contact) => new Date(c.created_at!).toDateString() === today).length,
-          weekCount: result.contacts.filter((c: Contact) => new Date(c.created_at!) >= weekAgo).length
-        })
+        // Log storage type for debugging
+        if (result.contacts.length === 0) {
+          console.log('No contacts found. This could mean:')
+          console.log('1. No contacts have been submitted yet')
+          console.log('2. Supabase connection issues (check console for errors)')
+          console.log('3. RLS policies blocking access')
+        }
       } else {
-        // Fallback to demo storage
-        console.log('API 연결 실패, 데모 모드로 전환')
-        const demoData = demoStorage.getContactsByStatus(selectedStatus === 'all' ? undefined : selectedStatus)
-        setContacts(demoData)
-        setStats(demoStorage.getStats())
-        setIsDemo(true)
+        console.error('Invalid API response:', result)
+        throw new Error(result.error || 'Failed to fetch contacts')
       }
     } catch (err) {
-      // Fallback to demo storage
-      console.log('API 연결 실패, 데모 모드로 전환:', err)
-      setError('데이터베이스 연결에 실패했습니다. 데모 모드로 전환됩니다.')
+      console.error('Error fetching contacts:', err)
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error'
+      setError(`문의 내역을 불러오는 중 오류가 발생했습니다: ${errorMessage}`)
+      setContacts([])
+      setStats({
+        total: 0,
+        new: 0,
+        read: 0,
+        replied: 0,
+        closed: 0,
+        todayCount: 0,
+        weekCount: 0
+      })
       
-      // Use demo storage only on client side
-      if (typeof window !== 'undefined') {
-        const demoData = demoStorage.getContactsByStatus(selectedStatus === 'all' ? undefined : selectedStatus)
-        setContacts(demoData)
-        setStats(demoStorage.getStats())
-        setIsDemo(true)
-        setError(null) // Clear error after successful demo mode switch
-      }
+      // Additional debugging info in console
+      console.log('Troubleshooting tips:')
+      console.log('1. Check if SUPABASE_SERVICE_ROLE_KEY is set in Vercel environment variables')
+      console.log('2. Run the SQL script in scripts/supabase-rls-policy.sql in Supabase SQL editor')
+      console.log('3. Verify the contacts table exists in Supabase')
+      console.log('4. Check browser console for more detailed errors')
     } finally {
       setLoading(false)
     }
@@ -99,24 +115,19 @@ export default function AdminPage() {
 
   const handleStatusUpdate = async (id: number, newStatus: Contact['status']) => {
     try {
-      if (isDemo) {
-        demoStorage.updateContactStatus(id, newStatus)
-        await fetchContacts()
-      } else {
-        const response = await fetch('/api/admin/contacts', {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ id, status: newStatus })
-        })
-        
-        if (!response.ok) {
-          throw new Error('Failed to update contact')
-        }
-        
-        await fetchContacts()
+      const response = await fetch('/api/admin/contacts', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id, status: newStatus })
+      })
+      
+      if (!response.ok) {
+        throw new Error('Failed to update contact')
       }
+      
+      await fetchContacts()
     } catch (err) {
       console.error('Status update error:', err)
       alert('상태 업데이트에 실패했습니다.')
@@ -127,12 +138,7 @@ export default function AdminPage() {
     if (!confirm('정말로 이 문의를 삭제하시겠습니까?')) return
     
     try {
-      if (isDemo) {
-        demoStorage.deleteContact(id)
-        await fetchContacts()
-      } else {
-        alert('Supabase 모드에서는 삭제가 지원되지 않습니다.')
-      }
+      alert('삭제 기능은 현재 지원되지 않습니다.')
     } catch (err) {
       alert('삭제에 실패했습니다.')
     }
@@ -223,11 +229,6 @@ export default function AdminPage() {
         >
           <div className="flex items-center justify-between mb-8">
             <h1 className="text-4xl font-bold text-white">문의 관리</h1>
-            {isDemo && (
-              <span className="px-4 py-2 bg-yellow-500/20 text-yellow-400 rounded-full text-sm font-medium border border-yellow-500/30">
-                데모 모드
-              </span>
-            )}
           </div>
           
           {/* Statistics Cards */}
@@ -471,14 +472,6 @@ export default function AdminPage() {
                         className="px-3 py-1 bg-gray-600 text-white rounded text-sm hover:bg-gray-700 transition-all"
                       >
                         종료
-                      </button>
-                    )}
-                    {isDemo && (
-                      <button
-                        onClick={() => handleDelete(contact.id!)}
-                        className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition-all ml-auto"
-                      >
-                        삭제
                       </button>
                     )}
                   </div>

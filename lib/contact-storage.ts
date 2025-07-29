@@ -17,20 +17,39 @@ export interface Contact {
 // Initialize Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
-// Create a service role client for server-side operations
+// Create appropriate Supabase client for server-side operations
 const getSupabaseClient = () => {
-  if (!supabaseUrl || !supabaseServiceKey) {
-    console.warn('Supabase credentials not configured')
+  if (!supabaseUrl) {
+    console.warn('Supabase URL not configured')
     return null
   }
   
-  return createClient(supabaseUrl, supabaseServiceKey, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  })
+  // Prefer service role key for full access
+  if (supabaseServiceKey && supabaseServiceKey !== 'your_service_role_key_here') {
+    console.log('Using Supabase with service role key')
+    return createClient(supabaseUrl, supabaseServiceKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
+      }
+    })
+  }
+  
+  // Fallback to anon key with limited permissions
+  if (supabaseAnonKey) {
+    console.log('Using Supabase with anon key (limited permissions)')
+    return createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
+      }
+    })
+  }
+  
+  console.warn('No Supabase keys configured, using in-memory storage')
+  return null
 }
 
 // In-memory fallback for when Supabase is unavailable
@@ -110,10 +129,18 @@ class ContactStorage {
         .select()
         .single()
       
-      if (error) throw error
+      if (error) {
+        // If it's an RLS error and we're using anon key, provide helpful message
+        if (error.message?.includes('row-level security') && !supabaseServiceKey) {
+          console.error('RLS Policy Error: Cannot insert with anon key. Please update RLS policies or use service role key.')
+          console.error('Run the SQL script in scripts/supabase-rls-policy.sql to fix this.')
+        }
+        throw error
+      }
       return data
     } catch (error) {
-      console.error('Error adding contact:', error)
+      console.error('Error adding contact to Supabase:', error)
+      console.log('Falling back to in-memory storage')
       const newContact: Contact = {
         ...contact,
         id: nextId++
