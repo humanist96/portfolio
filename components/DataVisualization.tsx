@@ -16,7 +16,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ title, value, change, icon: Ico
   return (
     <motion.div
       whileHover={{ scale: 1.05, y: -5 }}
-      className="relative bg-gradient-to-br from-gray-900/90 to-gray-800/70 backdrop-blur-xl rounded-2xl p-8 border border-gray-700/50 hover:border-purple-500/50 transition-all duration-300 shadow-2xl hover:shadow-purple-500/25 overflow-hidden group"
+      className="relative bg-gradient-to-br from-slate-900/90 to-slate-800/70 backdrop-blur-xl rounded-2xl p-8 border border-slate-700/50 hover:border-purple-500/50 transition-all duration-300 shadow-2xl hover:shadow-purple-500/25 overflow-hidden group"
     >
       {/* Background gradient effect */}
       <div className={`absolute inset-0 bg-gradient-to-br ${color} opacity-5 group-hover:opacity-10 transition-opacity duration-300`} />
@@ -87,7 +87,7 @@ const DataVisualization: React.FC = () => {
   ]
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-black">
+    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-900">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -122,7 +122,7 @@ const DataVisualization: React.FC = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true }}
-            className="mt-12 bg-gray-900/50 backdrop-blur-sm rounded-xl p-8 border border-gray-800"
+            className="mt-12 bg-slate-900/50 backdrop-blur-sm rounded-xl p-8 border border-slate-800"
           >
             <h3 className="text-xl font-semibold text-white mb-6">투자 수익률 추이</h3>
             <div className="h-64 flex items-end justify-between gap-2">

@@ -27,10 +27,10 @@ import { shaderMaterial } from '@react-three/drei'
 const GradientShaderMaterial = shaderMaterial(
   {
     time: 0,
-    colorA: new THREE.Color('#1a1a2e'),
-    colorB: new THREE.Color('#16213e'),
-    colorC: new THREE.Color('#0f3460'),
-    colorD: new THREE.Color('#e94560')
+    colorA: new THREE.Color('#0a0e27'), // Deep navy
+    colorB: new THREE.Color('#0f172a'), // Midnight blue
+    colorC: new THREE.Color('#1e293b'), // Royal navy
+    colorD: new THREE.Color('#334155')  // Soft navy gray (no red)
   },
   // Vertex shader
   `
@@ -54,7 +54,7 @@ const GradientShaderMaterial = shaderMaterial(
       
       vec3 color = mix(colorA, colorB, displacedUv.x);
       color = mix(color, colorC, displacedUv.y);
-      color = mix(color, colorD, sin(displacedUv.x * displacedUv.y + time * 0.2) * 0.5 + 0.5);
+      color = mix(color, colorD, sin(displacedUv.x * displacedUv.y + time * 0.2) * 0.3 + 0.3);
       
       gl_FragColor = vec4(color, 1.0);
     }
@@ -217,7 +217,7 @@ const FloatingCrystals = () => {
         (Math.random() - 0.5) * 10 - 5
       ] as [number, number, number],
       scale: Math.random() * 0.5 + 0.5,
-      color: ['#8B5CF6', '#EC4899', '#3B82F6', '#10B981'][i % 4]
+      color: ['#8B5CF6', '#6366F1', '#3B82F6', '#2563EB'][i % 4]
     }))
   }, [])
 
@@ -293,7 +293,7 @@ const Scene = () => {
       />
       
       {/* Fog for depth */}
-      <fog attach="fog" args={['#0a0a0a', 10, 50]} />
+      <fog attach="fog" args={['#0a0e27', 10, 50]} />
     </>
   )
 }
@@ -318,8 +318,8 @@ const ThreeBackgroundAdvanced: React.FC = () => {
       </Canvas>
       
       {/* Gradient Overlay for better text readability */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/80 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-transparent to-slate-900/90 pointer-events-none" />
     </div>
   )
 }

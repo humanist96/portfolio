@@ -7,7 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "pre-deploy": "npm run type-check && npm run lint && npm run build",
+    "deploy:preview": "npm run pre-deploy && vercel",
+    "deploy:production": "npm run pre-deploy && vercel --prod",
+    "clean": "rm -rf .next node_modules && npm install",
+    "update-deps": "npm update && npm audit fix",
+    "analyze": "ANALYZE=true next build"
   },
   "dependencies": {
     "next": "14.1.0",

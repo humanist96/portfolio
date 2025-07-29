@@ -1,11 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { contactStorage } from '@/lib/contact-storage'
 
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://smlxpztmpauuxbptmtcv.supabase.co'
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNtbHhwenRtcGF1dXhicHRtdGN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM3NTI2OTEsImV4cCI6MjA2OTMyODY5MX0.BJXj4J5epfWMOvSvsaFNfzEDwyxmMue7uyCNE9cnegI'
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 // Email validation regex
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -80,57 +75,34 @@ export async function POST(request: NextRequest) {
       status: 'new'
     }
 
-    // Try to insert into Supabase
-    console.log('Attempting to save to Supabase...')
+    // Save contact using contact storage
+    console.log('Attempting to save contact...')
     
     try {
-      const { data, error } = await supabase
-        .from('contacts')
-        .insert([sanitizedData])
-        .select()
-
-      if (error) {
-        console.error('Supabase error:', error)
-        
-        // If table doesn't exist or any other error, use demo mode
-        console.log('Falling back to demo mode due to Supabase error')
-        console.log('Contact form submission (Demo mode):', sanitizedData)
-        
-        // Still return success to the user, but note it's demo mode
-        return NextResponse.json(
-          { 
-            success: true,
-            message: '메시지가 접수되었습니다. 빠른 시일 내에 연락드리겠습니다.',
-            data: sanitizedData,
-            mode: 'demo'
-          },
-          { status: 201 }
-        )
-      }
-
-      // Success response from Supabase
-      console.log('Successfully saved to Supabase:', data)
+      const savedContact = await contactStorage.addContact({
+        ...sanitizedData,
+        status: 'new' as const
+      })
+      
+      console.log('Contact saved successfully:', savedContact)
+      
       return NextResponse.json(
         { 
           success: true,
           message: '메시지가 성공적으로 전송되었습니다.',
-          data: data && data[0] ? data[0] : sanitizedData
+          data: savedContact
         },
         { status: 201 }
       )
     } catch (error) {
-      console.error('Unexpected error:', error)
+      console.error('Error saving contact:', error)
       
-      // Fallback to demo mode
-      console.log('Contact form submission (Demo mode):', sanitizedData)
       return NextResponse.json(
         { 
-          success: true,
-          message: '메시지가 접수되었습니다. 빠른 시일 내에 연락드리겠습니다.',
-          data: sanitizedData,
-          mode: 'demo'
+          success: false,
+          error: '메시지 전송에 실패했습니다. 잠시 후 다시 시도해주세요.' 
         },
-        { status: 201 }
+        { status: 500 }
       )
     }
 
