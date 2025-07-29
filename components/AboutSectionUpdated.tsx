@@ -1,4 +1,5 @@
 import React from 'react'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Award, BookOpen, Users, Briefcase, Brain, Home } from 'lucide-react'
 
@@ -37,8 +38,23 @@ const AboutSectionUpdated: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur-2xl opacity-50 animate-pulse" />
                 
                 {/* Profile Image Container */}
-                <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-white/20 backdrop-blur-sm">
-                  <div className="w-full h-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
+                <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-white/20 backdrop-blur-sm group">
+                  <Image
+                    src="/정케빈.jpg"
+                    alt="정케빈 (Kevin Jung) - AI 전문가 & 부동산 투자 컨설턴트"
+                    width={320}
+                    height={320}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                    priority
+                    onError={(e) => {
+                      // Hide image and show fallback
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      const fallback = target.nextElementSibling;
+                      if (fallback) fallback.classList.remove('hidden');
+                    }}
+                  />
+                  <div className="hidden w-full h-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center absolute inset-0">
                     <div className="text-center">
                       <div className="text-white text-6xl font-bold mb-2">KJ</div>
                       <div className="text-white/80 text-sm">Kevin Jung</div>

@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import { Brain, TrendingUp, Home, ChevronDown } from 'lucide-react'
 
 // Dynamic import for 3D background
-const ThreeBackground = dynamic(() => import('./ThreeBackground'), {
+const ThreeBackground = dynamic(() => import('./ThreeBackgroundNew'), {
   ssr: false,
   loading: () => <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900" />
 })
