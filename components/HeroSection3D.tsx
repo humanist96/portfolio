@@ -15,6 +15,13 @@ const HeroSection3D: React.FC = () => {
   const scrollToSection = () => {
     window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })
   }
+  
+  const scrollToContact = () => {
+    const contactSection = document.querySelector('#contact-section')
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
@@ -120,7 +127,10 @@ const HeroSection3D: React.FC = () => {
           >
             아파트 매물 검색 서비스
           </a>
-          <button className="px-8 py-4 bg-transparent border-2 border-white/50 text-white font-semibold rounded-full hover:bg-white/10 hover:border-white transform hover:scale-105 transition-all duration-200 backdrop-blur-sm">
+          <button 
+            onClick={scrollToContact}
+            className="px-8 py-4 bg-transparent border-2 border-white/50 text-white font-semibold rounded-full hover:bg-white/10 hover:border-white transform hover:scale-105 transition-all duration-200 backdrop-blur-sm"
+          >
             문의하기
           </button>
         </motion.div>

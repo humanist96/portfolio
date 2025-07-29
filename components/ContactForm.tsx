@@ -34,6 +34,8 @@ const ContactForm: React.FC = () => {
     setErrorMessage('')
 
     try {
+      console.log('Sending contact form:', formData)
+      
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
@@ -42,7 +44,9 @@ const ContactForm: React.FC = () => {
         body: JSON.stringify(formData)
       })
 
+      console.log('Response status:', response.status)
       const data = await response.json()
+      console.log('Response data:', data)
 
       if (response.ok && data.success) {
         setSubmitStatus('success')
@@ -50,11 +54,13 @@ const ContactForm: React.FC = () => {
         setTimeout(() => setSubmitStatus('idle'), 5000)
       } else {
         setSubmitStatus('error')
-        setErrorMessage(data.error || '문의 전송에 실패했습니다.')
+        setErrorMessage(data.error || data.errors?.join(', ') || '문의 전송에 실패했습니다.')
+        console.error('Form submission error:', data)
       }
     } catch (error) {
+      console.error('Network error:', error)
       setSubmitStatus('error')
-      setErrorMessage('네트워크 오류가 발생했습니다.')
+      setErrorMessage('네트워크 오류가 발생했습니다. 콘솔을 확인해주세요.')
     } finally {
       setIsSubmitting(false)
     }

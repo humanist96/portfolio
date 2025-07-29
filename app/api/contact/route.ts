@@ -17,9 +17,12 @@ interface ContactData {
 }
 
 export async function POST(request: NextRequest) {
+  console.log('Contact API called')
+  
   try {
     // Parse request body
     const body = await request.json()
+    console.log('Request body:', body)
     const { name, email, message } = body as ContactData
 
     // Validation
