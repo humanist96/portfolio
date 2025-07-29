@@ -13,7 +13,7 @@ const TechBadge: React.FC<TechBadgeProps> = ({ tech }) => {
   )
 }
 
-interface PortfolioCardProps {
+export interface PortfolioCardProps {
   title: string
   description: string
   techStack: string[]
