@@ -1,70 +1,98 @@
 'use client'
 
-import HeroSection from '@/components/HeroSection'
-import AboutSection from '@/components/AboutSection'
+import dynamic from 'next/dynamic'
+import { Suspense } from 'react'
+import AboutSectionUpdated from '@/components/AboutSectionUpdated'
 import AnimatedSection from '@/components/AnimatedSection'
 import { PortfolioGrid } from '@/components/PortfolioCard'
-import type { PortfolioCardProps } from '@/components/PortfolioCard'
+import { kevinProjects } from '@/components/UpdatedPortfolioData'
+import TechStack from '@/components/TechStack'
+import { ThemeProvider } from '@/components/ThemeProvider'
+import { ThemeToggle } from '@/components/ThemeToggle'
 
-// 샘플 프로젝트 데이터
-const sampleProjects: PortfolioCardProps[] = [
-  {
-    title: 'AI 기반 금융 분석 시스템',
-    description: '머신러닝을 활용한 실시간 금융 데이터 분석 및 예측 시스템. 고객 맞춤형 투자 전략을 제공합니다.',
-    techStack: ['Python', 'TensorFlow', 'FastAPI', 'React'],
-    projectType: 'fullstack',
-    githubUrl: '#',
-    liveUrl: '#'
-  },
-  {
-    title: 'RAG 기반 문서 검색 엔진',
-    description: '대용량 금융 문서에서 정확한 정보를 빠르게 검색하는 RAG 시스템. 자연어 처리 기술을 활용합니다.',
-    techStack: ['LangChain', 'OpenAI', 'Pinecone', 'Next.js'],
-    projectType: 'api',
-    githubUrl: '#'
-  },
-  {
-    title: '실시간 주식 대시보드',
-    description: 'WebSocket을 활용한 실시간 주식 시세 모니터링 대시보드. 직관적인 UI로 시장 동향을 파악합니다.',
-    techStack: ['Vue.js', 'WebSocket', 'D3.js', 'Node.js'],
-    projectType: 'web',
-    liveUrl: '#'
-  }
-]
+// Dynamic import for 3D Hero Section
+const HeroSection3D = dynamic(() => import('@/components/HeroSection3D'), {
+  ssr: false,
+  loading: () => (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
+      <div className="text-white text-2xl">Loading...</div>
+    </div>
+  )
+})
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Hero Section */}
-      <HeroSection />
-      
-      {/* About Section */}
-      <AnimatedSection>
-        <AboutSection />
-      </AnimatedSection>
-      
-      {/* Portfolio Section */}
-      <AnimatedSection className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
-          프로젝트 포트폴리오
-        </h2>
-        <PortfolioGrid projects={sampleProjects} />
-      </AnimatedSection>
-      
-      {/* Contact Section */}
-      <AnimatedSection className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-800">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-            함께 만들어가요
-          </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
-            새로운 프로젝트나 협업 기회에 대해 이야기를 나누고 싶으시다면 언제든 연락주세요.
-          </p>
-          <button className="px-8 py-4 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg">
-            문의하기
-          </button>
-        </div>
-      </AnimatedSection>
-    </main>
+    <ThemeProvider>
+      <main className="min-h-screen bg-black dark:bg-black">
+        {/* Theme Toggle */}
+        <ThemeToggle />
+        
+        {/* Hero Section with 3D Background */}
+        <Suspense fallback={<div className="min-h-screen bg-black" />}>
+          <HeroSection3D />
+        </Suspense>
+        
+        {/* About Section */}
+        <AnimatedSection>
+          <AboutSectionUpdated />
+        </AnimatedSection>
+        
+        {/* Tech Stack Section */}
+        <AnimatedSection>
+          <TechStack />
+        </AnimatedSection>
+        
+        {/* Portfolio Section */}
+        <AnimatedSection className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-900 to-black">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-4xl font-bold text-center text-white mb-4">
+              프로젝트 포트폴리오
+            </h2>
+            <p className="text-gray-400 text-center mb-12">
+              AI와 부동산 투자의 시너지를 창출하는 혁신적인 프로젝트들
+            </p>
+            <PortfolioGrid projects={kevinProjects} />
+          </div>
+        </AnimatedSection>
+        
+        {/* Contact Section */}
+        <AnimatedSection className="py-20 px-4 sm:px-6 lg:px-8 bg-black border-t border-gray-800">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-4xl font-bold text-white mb-8">
+              함께 성장하는 투자
+            </h2>
+            <p className="text-lg text-gray-400 mb-8">
+              AI 기술과 부동산 투자 경험을 결합한 혁신적인 프로젝트에 대해 
+              함께 논의하고 싶으시다면 언제든 연락주세요.
+            </p>
+            
+            {/* Contact Links */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+              <a
+                href="https://ordinarybusinessman.imweb.me/18"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-full hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg"
+              >
+                블로그 방문
+              </a>
+              <a
+                href="https://youtube.com/watch"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-8 py-4 bg-transparent border-2 border-white/50 text-white font-semibold rounded-full hover:bg-white/10 hover:border-white transform hover:scale-105 transition-all duration-200"
+              >
+                YouTube 채널
+              </a>
+            </div>
+            
+            {/* Email */}
+            <p className="text-gray-400">
+              이메일: <span className="text-white">humanist96@gmail.com</span>
+            </p>
+          </div>
+        </AnimatedSection>
+      </main>
+    </ThemeProvider>
   )
 }

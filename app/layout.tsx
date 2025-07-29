@@ -5,21 +5,21 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: '정경석 - AI & 금융 IT 전문가 포트폴리오',
-  description: 'AI와 RAG 시스템 전문가, Koscom 금융 IT 엔지니어. 혁신적인 금융 기술 솔루션과 AI 프로젝트를 소개합니다.',
-  keywords: ['정경석', 'AI 전문가', 'RAG 시스템', '금융 IT', 'Koscom', '포트폴리오'],
-  authors: [{ name: '정경석' }],
+  title: '정케빈 - AI 전문가 & 부동산 투자 컨설턴트',
+  description: 'AI 20년, 부동산 투자 15년 경력. 전산학 박사, 금융 IT 데이터 분석가, AI 강사. 혁신적인 부동산 분석 서비스 제공.',
+  keywords: ['정케빈', 'Kevin Jung', 'AI 전문가', '부동산 투자', '금융 IT', '데이터 분석', '지피터스'],
+  authors: [{ name: '정케빈 (Kevin Jung)' }],
   openGraph: {
-    title: '정경석 - AI & 금융 IT 전문가 포트폴리오',
-    description: 'AI와 RAG 시스템 전문가, Koscom 금융 IT 엔지니어',
+    title: '정케빈 - AI 전문가 & 부동산 투자 컨설턴트',
+    description: 'AI 20년, 부동산 투자 15년 경력. 혁신적인 부동산 분석 서비스 제공.',
     type: 'website',
     locale: 'ko_KR',
-    siteName: '정경석 포트폴리오',
+    siteName: '정케빈 포트폴리오',
   },
   twitter: {
     card: 'summary_large_image',
-    title: '정경석 - AI & 금융 IT 전문가',
-    description: 'AI와 RAG 시스템 전문가, Koscom 금융 IT 엔지니어',
+    title: '정케빈 - AI 전문가 & 부동산 투자 컨설턴트',
+    description: 'AI 20년, 부동산 투자 15년 경력. 혁신적인 부동산 분석 서비스 제공.',
   },
   robots: {
     index: true,
