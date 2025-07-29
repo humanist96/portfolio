@@ -14,8 +14,8 @@ import DataVisualization from '@/components/DataVisualization'
 import ExpertServices from '@/components/ExpertServices'
 import ContactForm from '@/components/ContactForm'
 
-// Dynamic import for 3D Hero Section
-const HeroSection3D = dynamic(() => import('@/components/HeroSection3D'), {
+// Dynamic import for Enhanced 3D Hero Section
+const HeroSection3DEnhanced = dynamic(() => import('@/components/HeroSection3DEnhanced'), {
   ssr: false,
   loading: () => (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
@@ -34,9 +34,9 @@ export default function Home() {
         {/* Theme Toggle */}
         <ThemeToggle />
         
-        {/* Hero Section with 3D Background */}
+        {/* Enhanced Hero Section with 3D Background */}
         <Suspense fallback={<div className="min-h-screen bg-black" />}>
-          <HeroSection3D />
+          <HeroSection3DEnhanced />
         </Suspense>
         
         {/* About Section */}
