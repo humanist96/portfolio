@@ -3,7 +3,7 @@
 import React, { Suspense, useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Brain, TrendingUp, Home, ChevronDown, Award, Briefcase, ChartBar, Sparkles, Code, Building, DollarSign, Target } from 'lucide-react'
+import { Brain, TrendingUp, Home, ChevronDown, Award, Briefcase, BarChart3, Sparkles, Code, Building, DollarSign, Target } from 'lucide-react'
 import Image from 'next/image'
 
 // Dynamic import for 3D background
@@ -46,7 +46,7 @@ const HeroSection3DEnhanced: React.FC = () => {
     { icon: Brain, label: "AI 전문가", value: "20년+", color: "from-blue-400 to-cyan-400" },
     { icon: Building, label: "부동산 투자", value: "15년+", color: "from-purple-400 to-pink-400" },
     { icon: Award, label: "전산학 박사", value: "AI전공", color: "from-green-400 to-emerald-400" },
-    { icon: ChartBar, label: "금융 AI 강사", value: "5년+", color: "from-orange-400 to-red-400" }
+    { icon: BarChart3, label: "금융 AI 강사", value: "5년+", color: "from-orange-400 to-red-400" }
   ]
 
   return (
@@ -62,16 +62,16 @@ const HeroSection3DEnhanced: React.FC = () => {
       
       {/* Animated particles */}
       <div className="absolute inset-0 z-10">
-        {[...Array(30)].map((_, i) => (
+        {isLoaded && [...Array(30)].map((_, i) => (
           <motion.div
             key={i}
             className="absolute w-1 h-1 bg-white/20 rounded-full"
             initial={{ 
-              x: Math.random() * window.innerWidth,
-              y: Math.random() * window.innerHeight 
+              x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1920),
+              y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1080) 
             }}
             animate={{ 
-              y: [null, -window.innerHeight],
+              y: [null, -1080],
               opacity: [0, 1, 0]
             }}
             transition={{ 

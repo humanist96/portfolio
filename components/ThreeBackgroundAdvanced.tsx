@@ -80,11 +80,11 @@ const DNAHelix = () => {
     const count = 40
     for (let i = 0; i < count; i++) {
       const t = i / count * Math.PI * 4
-      const x1 = Math.sin(t) * 2
-      const z1 = Math.cos(t) * 2
-      const x2 = Math.sin(t + Math.PI) * 2
-      const z2 = Math.cos(t + Math.PI) * 2
-      const y = (i - count / 2) * 0.5
+      const x1 = Math.sin(t) * 4  // Doubled from 2 to 4
+      const z1 = Math.cos(t) * 4  // Doubled from 2 to 4
+      const x2 = Math.sin(t + Math.PI) * 4  // Doubled from 2 to 4
+      const z2 = Math.cos(t + Math.PI) * 4  // Doubled from 2 to 4
+      const y = (i - count / 2) * 0.8  // Increased from 0.5 to 0.8
       temp.push({ position: [x1, y, z1], color: '#8B5CF6' })
       temp.push({ position: [x2, y, z2], color: '#EC4899' })
     }
@@ -99,10 +99,10 @@ const DNAHelix = () => {
   })
 
   return (
-    <group ref={group} position={[5, 0, -10]}>
+    <group ref={group} position={[5, 0, -5]}>
       {spheres.map((sphere, i) => (
-        <Trail key={i} width={2} length={6} color={sphere.color} attenuation={(t) => t * t}>
-          <Sphere args={[0.1, 16, 16]} position={sphere.position as [number, number, number]}>
+        <Trail key={i} width={4} length={8} color={sphere.color} attenuation={(t) => t * t}>
+          <Sphere args={[0.2, 16, 16]} position={sphere.position as [number, number, number]}>
             <meshStandardMaterial
               color={sphere.color}
               emissive={sphere.color}
@@ -125,14 +125,14 @@ const AnimatedTorusKnot = () => {
     if (mesh.current) {
       mesh.current.rotation.x = state.clock.elapsedTime * 0.3
       mesh.current.rotation.y = state.clock.elapsedTime * 0.2
-      mesh.current.scale.setScalar(1 + Math.sin(state.clock.elapsedTime) * 0.1)
+      mesh.current.scale.setScalar(2 + Math.sin(state.clock.elapsedTime) * 0.3)  // Increased base scale from 1 to 2
     }
   })
 
   return (
     <Float speed={2} rotationIntensity={1} floatIntensity={2}>
-      <mesh ref={mesh} position={[-5, 2, -8]}>
-        <torusKnotGeometry args={[1, 0.3, 128, 16]} />
+      <mesh ref={mesh} position={[-5, 2, -5]}>
+        <torusKnotGeometry args={[2, 0.6, 128, 16]} />
         <MeshDistortMaterial
           color="#3B82F6"
           attach="material"
@@ -156,9 +156,9 @@ const ParticleNetwork = () => {
   const particlesPosition = useMemo(() => {
     const positions = new Float32Array(3000)
     for (let i = 0; i < 1000; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 20
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 20
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 20
+      positions[i * 3] = (Math.random() - 0.5) * 30  // Increased from 20 to 30
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 30  // Increased from 20 to 30
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 30  // Increased from 20 to 30
     }
     return positions
   }, [])
@@ -179,7 +179,7 @@ const ParticleNetwork = () => {
       <PointMaterial
         transparent
         color="#8B5CF6"
-        size={0.05}
+        size={0.1}  // Increased from 0.05 to 0.1
         sizeAttenuation={true}
         depthWrite={false}
         blending={THREE.AdditiveBlending}
@@ -212,11 +212,11 @@ const FloatingCrystals = () => {
   const crystals = useMemo(() => {
     return Array.from({ length: 8 }, (_, i) => ({
       position: [
-        (Math.random() - 0.5) * 15,
-        (Math.random() - 0.5) * 10,
-        (Math.random() - 0.5) * 10 - 5
+        (Math.random() - 0.5) * 20,  // Increased from 15 to 20
+        (Math.random() - 0.5) * 15,  // Increased from 10 to 15
+        (Math.random() - 0.5) * 15 - 3  // Adjusted depth
       ] as [number, number, number],
-      scale: Math.random() * 0.5 + 0.5,
+      scale: Math.random() * 1.5 + 1,  // Increased from 0.5-1 to 1-2.5
       color: ['#8B5CF6', '#6366F1', '#3B82F6', '#2563EB'][i % 4]
     }))
   }, [])
@@ -226,7 +226,7 @@ const FloatingCrystals = () => {
       {crystals.map((crystal, i) => (
         <Float key={i} speed={1 + i * 0.2} rotationIntensity={2} floatIntensity={1}>
           <mesh position={crystal.position} scale={crystal.scale}>
-            <octahedronGeometry args={[1, 0]} />
+            <octahedronGeometry args={[2, 0]} />
             <meshStandardMaterial
               color={crystal.color}
               emissive={crystal.color}
@@ -274,9 +274,9 @@ const Scene = () => {
       
       {/* Additional Effects */}
       <Sparkles 
-        count={100} 
-        scale={20} 
-        size={2} 
+        count={150}  // Increased from 100
+        scale={30}   // Increased from 20
+        size={3}     // Increased from 2
         speed={0.5} 
         color="#ffffff"
         opacity={0.5}
@@ -302,7 +302,7 @@ const ThreeBackgroundAdvanced: React.FC = () => {
   return (
     <div className="absolute inset-0 z-0">
       <Canvas
-        camera={{ position: [0, 0, 8], fov: 75 }}
+        camera={{ position: [0, 0, 12], fov: 75 }}
         gl={{ 
           antialias: true, 
           alpha: true,
