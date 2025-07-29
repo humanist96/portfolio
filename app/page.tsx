@@ -9,6 +9,10 @@ import { kevinProjects } from '@/components/UpdatedPortfolioData'
 import TechStack from '@/components/TechStack'
 import { ThemeProvider } from '@/components/ThemeProvider'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import FloatingElements from '@/components/FloatingElements'
+import DataVisualization from '@/components/DataVisualization'
+import ExpertServices from '@/components/ExpertServices'
+import ContactForm from '@/components/ContactForm'
 
 // Dynamic import for 3D Hero Section
 const HeroSection3D = dynamic(() => import('@/components/HeroSection3D'), {
@@ -23,7 +27,10 @@ const HeroSection3D = dynamic(() => import('@/components/HeroSection3D'), {
 export default function Home() {
   return (
     <ThemeProvider>
-      <main className="min-h-screen bg-black dark:bg-black">
+      <main className="min-h-screen bg-black dark:bg-black relative overflow-hidden">
+        {/* Floating Elements */}
+        <FloatingElements />
+        
         {/* Theme Toggle */}
         <ThemeToggle />
         
@@ -35,6 +42,16 @@ export default function Home() {
         {/* About Section */}
         <AnimatedSection>
           <AboutSectionUpdated />
+        </AnimatedSection>
+        
+        {/* Data Visualization Section */}
+        <AnimatedSection>
+          <DataVisualization />
+        </AnimatedSection>
+        
+        {/* Expert Services Section */}
+        <AnimatedSection>
+          <ExpertServices />
         </AnimatedSection>
         
         {/* Tech Stack Section */}
@@ -57,17 +74,20 @@ export default function Home() {
         
         {/* Contact Section */}
         <AnimatedSection className="py-20 px-4 sm:px-6 lg:px-8 bg-black border-t border-gray-800">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-4xl font-bold text-white mb-8">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-4xl font-bold text-white mb-8 text-center">
               함께 성장하는 투자
             </h2>
-            <p className="text-lg text-gray-400 mb-8">
+            <p className="text-lg text-gray-400 mb-12 text-center max-w-3xl mx-auto">
               AI 기술과 부동산 투자 경험을 결합한 혁신적인 프로젝트에 대해 
               함께 논의하고 싶으시다면 언제든 연락주세요.
             </p>
             
+            {/* Contact Form */}
+            <ContactForm />
+            
             {/* Contact Links */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12 mb-8">
               <a
                 href="https://ordinarybusinessman.imweb.me/18"
                 target="_blank"
@@ -87,8 +107,8 @@ export default function Home() {
             </div>
             
             {/* Email */}
-            <p className="text-gray-400">
-              이메일: <span className="text-white">humanist96@gmail.com</span>
+            <p className="text-gray-400 text-center">
+              직접 연락: <span className="text-white">humanist96@gmail.com</span>
             </p>
           </div>
         </AnimatedSection>
