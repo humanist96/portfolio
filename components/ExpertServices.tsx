@@ -176,6 +176,12 @@ const ExpertServices: React.FC = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={() => {
+                const contactSection = document.querySelector('#contact-section')
+                if (contactSection) {
+                  contactSection.scrollIntoView({ behavior: 'smooth' })
+                }
+              }}
               className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-full hover:from-purple-700 hover:to-pink-700 transition-all duration-200 shadow-lg shadow-purple-500/25"
             >
               무료 상담 신청
