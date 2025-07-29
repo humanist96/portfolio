@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import { Brain, TrendingUp, Home, ChevronDown } from 'lucide-react'
 
 // Dynamic import for 3D background
-const ThreeBackground = dynamic(() => import('./ThreeBackgroundNew'), {
+const ThreeBackground = dynamic(() => import('./ThreeBackgroundAdvanced'), {
   ssr: false,
   loading: () => <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900" />
 })
@@ -30,8 +30,9 @@ const HeroSection3D: React.FC = () => {
         <ThreeBackground />
       </Suspense>
       
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent z-10" />
+      {/* Enhanced Gradient Overlays for depth */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10" />
+      <div className="absolute inset-0 bg-radial-gradient from-transparent via-black/20 to-black/60 z-10" />
       
       {/* Content Container */}
       <div className="relative z-20 text-center px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -94,21 +95,21 @@ const HeroSection3D: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          <div className="bg-white/10 backdrop-blur-md rounded-lg p-4">
-            <h3 className="text-3xl font-bold text-white">20+</h3>
-            <p className="text-gray-400">년 AI 경력</p>
+          <div className="bg-white/5 backdrop-blur-lg rounded-xl p-6 border border-white/10 shadow-2xl hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-purple-500/20">
+            <h3 className="text-4xl font-bold text-white mb-1 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">20+</h3>
+            <p className="text-gray-300">년 AI 경력</p>
           </div>
-          <div className="bg-white/10 backdrop-blur-md rounded-lg p-4">
-            <h3 className="text-3xl font-bold text-white">15+</h3>
-            <p className="text-gray-400">년 부동산 투자</p>
+          <div className="bg-white/5 backdrop-blur-lg rounded-xl p-6 border border-white/10 shadow-2xl hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-pink-500/20">
+            <h3 className="text-4xl font-bold text-white mb-1 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">15+</h3>
+            <p className="text-gray-300">년 부동산 투자</p>
           </div>
-          <div className="bg-white/10 backdrop-blur-md rounded-lg p-4">
-            <h3 className="text-3xl font-bold text-white">박사</h3>
-            <p className="text-gray-400">전산학 AI전공</p>
+          <div className="bg-white/5 backdrop-blur-lg rounded-xl p-6 border border-white/10 shadow-2xl hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-blue-500/20">
+            <h3 className="text-4xl font-bold text-white mb-1 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">박사</h3>
+            <p className="text-gray-300">전산학 AI전공</p>
           </div>
-          <div className="bg-white/10 backdrop-blur-md rounded-lg p-4">
-            <h3 className="text-3xl font-bold text-white">5년</h3>
-            <p className="text-gray-400">금융 AI 강사</p>
+          <div className="bg-white/5 backdrop-blur-lg rounded-xl p-6 border border-white/10 shadow-2xl hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-green-500/20">
+            <h3 className="text-4xl font-bold text-white mb-1 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">5년</h3>
+            <p className="text-gray-300">금융 AI 강사</p>
           </div>
         </motion.div>
 

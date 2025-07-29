@@ -16,20 +16,40 @@ const MetricCard: React.FC<MetricCardProps> = ({ title, value, change, icon: Ico
   return (
     <motion.div
       whileHover={{ scale: 1.05, y: -5 }}
-      className="bg-gray-900/80 backdrop-blur-sm rounded-xl p-6 border border-gray-800 hover:border-gray-600 transition-all duration-300"
+      className="relative bg-gradient-to-br from-gray-900/90 to-gray-800/70 backdrop-blur-xl rounded-2xl p-8 border border-gray-700/50 hover:border-purple-500/50 transition-all duration-300 shadow-2xl hover:shadow-purple-500/25 overflow-hidden group"
     >
-      <div className="flex items-start justify-between mb-4">
-        <div className={`p-3 rounded-lg bg-gradient-to-br ${color}`}>
-          <Icon className="w-6 h-6 text-white" />
+      {/* Background gradient effect */}
+      <div className={`absolute inset-0 bg-gradient-to-br ${color} opacity-5 group-hover:opacity-10 transition-opacity duration-300`} />
+      
+      {/* Content */}
+      <div className="relative z-10">
+        <div className="flex items-start justify-between mb-4">
+          <div className={`p-4 rounded-xl bg-gradient-to-br ${color} shadow-lg`}>
+            <Icon className="w-7 h-7 text-white" />
+          </div>
+          {change && (
+            <motion.span 
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className={`text-sm font-semibold px-3 py-1 rounded-full ${
+                change.startsWith('+') 
+                  ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                  : 'bg-red-500/20 text-red-400 border border-red-500/30'
+              }`}
+            >
+              {change}
+            </motion.span>
+          )}
         </div>
-        {change && (
-          <span className={`text-sm font-medium ${change.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
-            {change}
-          </span>
-        )}
+        <h3 className="text-gray-300 text-sm font-medium mb-2 tracking-wide">{title}</h3>
+        <p className="text-3xl font-bold text-white bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+          {value}
+        </p>
       </div>
-      <h3 className="text-gray-400 text-sm font-medium mb-1">{title}</h3>
-      <p className="text-2xl font-bold text-white">{value}</p>
+      
+      {/* Decorative element */}
+      <div className={`absolute -bottom-8 -right-8 w-32 h-32 bg-gradient-to-br ${color} opacity-10 rounded-full blur-2xl group-hover:opacity-20 transition-opacity duration-300`} />
     </motion.div>
   )
 }
